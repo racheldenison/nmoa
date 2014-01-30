@@ -1,0 +1,25 @@
+% rd_runNMOA.m
+
+
+
+% Make stimuli
+stimCenters = [100 -100];
+for iStim = 1:numel(stimCenters)
+    stim(iStim,:) = makeGaussian(x,stimCenters(iStim),stimWidth,1); 
+end
+stimulus = sum(stim,1);
+
+
+%% Set up
+% Sampling of space
+x = -200:200;
+
+% Set stimulus and attention fields in opts
+opts.stimCenters = [100 -100];
+opts.stimWidth = 5;
+opts.Ax = opts.stimCenters(1);
+opts.AxWidth = 30;
+
+%% Make stimulus and run model
+stimulus = rd_nmMakeStim(x, opts);
+R = attentionModel1D(x, stimulus, opts);

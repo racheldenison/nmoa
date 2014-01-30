@@ -12,11 +12,19 @@ function result = conv2sepYcirc(im,rowfilt,colfilt)
 %
 % DJH '96
 
-rowfilt=rowfilt(:)';
-colfilt=colfilt(:);
+if notDefined('colfilt')
+    colfilt = [];
+end
 
+rowfilt=rowfilt(:)';
 tmp = upConv(im,rowfilt,'zero',[1,1]);
-result = upConv(tmp,colfilt,'circular',[1,1]);
+
+if ~isempty(colfilt)
+    colfilt=colfilt(:);
+    result = upConv(tmp,colfilt,'circular',[1,1]);
+else
+    result = tmp;
+end
 return
 
 %%% Debug
