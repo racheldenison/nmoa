@@ -72,6 +72,8 @@ for index = 1:2:length(inputs)
     field = inputs{index};
     val = inputs{index+1};
     switch field
+        case 'x'
+            x = val;
         case 'ExWidth'
             ExWidth = val;
         case 'IxWidth'
@@ -98,6 +100,8 @@ for index = 1:2:length(inputs)
             stimCenters = val;
         case 'stimWidth'
             stimWidth = val;
+        case 'axHandle'
+            axHandle = val;
         otherwise
             warning(['attentionModel: invalid parameter: ',field]);
     end
@@ -147,6 +151,9 @@ end
 if notDefined('stimulus')
     stimulus = rd_nmMakeStim(x, stimCenters, stimWidth);
 end
+if notDefined('axHandle')
+    axHandle = [];
+end
 
 %% Stimulation field and suppressive field
 ExKernel = makeGaussian(x,0,ExWidth);
@@ -176,6 +183,11 @@ R = E ./ (I + sigma) + baselineUnmod;
 Rmax = max(R(:));
 
 %% Plot figs
+if isempty(axHandle)
+    gca
+else
+    axes(axHandle)
+end
 cla;
 hold on
 plot(x, stimulus,'k')

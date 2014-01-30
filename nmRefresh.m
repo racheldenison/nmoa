@@ -1,4 +1,4 @@
-function nm = nmRefresh(nm)
+function [nm R] = nmRefresh(nm)
 
 
 %% Get the nm structure
@@ -26,3 +26,7 @@ if attnOn
 else
     opts.Ax = NaN;
 end
+
+opts.axHandle = nm.ui.axes;
+
+R = attentionModel1D([],[],opts);
