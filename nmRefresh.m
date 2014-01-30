@@ -1,4 +1,11 @@
-function [nm R] = nmRefresh(nm)
+function [nm R] = nmRefresh(nm, opts)
+%
+% function [nm R] = nmRefresh(nm, opts)
+%
+% Refresh the nm figure window after recomputing the model.
+%
+% nm is the nm struture containing all the figure/model data
+% opts is the options structure (optional)
 
 
 %% Get the nm structure
@@ -35,5 +42,5 @@ opts.AxWidth = attnSize;
 opts.axHandle = nm.ui.axes;
 
 %% Run model
-R = attentionModel1D([],[],opts);
+R = attentionModel1D(opts);
 
