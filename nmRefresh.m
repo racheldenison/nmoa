@@ -22,7 +22,6 @@ attnSize = get(nm.ui.attnSize.sliderHandle,'Value');
 % attention on
 attnOn = get(nm.ui.attnOn,'Value');
 
-
 %% Set opts
 opts.stimCenters = stimPos;
 
@@ -37,3 +36,4 @@ opts.axHandle = nm.ui.axes;
 
 %% Run model
 R = attentionModel1D([],[],opts);
+
