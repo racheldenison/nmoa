@@ -104,6 +104,9 @@ for index = 1:2:length(inputs)
 end
 
 %% Choose default values for unspecified parameters
+if notDefined('x')
+    x = -200:200;
+end
 if notDefined('ExWidth')
     ExWidth = 5;
 end
@@ -173,7 +176,7 @@ R = E ./ (I + sigma) + baselineUnmod;
 Rmax = max(R(:));
 
 %% Plot figs
-figure
+cla;
 hold on
 plot(x, stimulus,'k')
 plot(x, attnGain,'k')

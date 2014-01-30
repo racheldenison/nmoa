@@ -4,7 +4,8 @@ function R = attentionModel1D(x,stimulus,varargin)
 %
 % Required arguments
 % x is a row vector of spatial coordinates
-% stimulus is 1xM where M is the length of x
+% stimulus is 1xM where M is the length of x. Leave empty to generate
+% default stimulus.
 %
 % Optional parameters are passed as string/value pairs. If any of them are
 % not specified then default values are used. Valid parameters are as
@@ -94,15 +95,18 @@ for index = 1:2:length(inputs)
         case 'showModelParameters'
             showModelParameters = val;
         case 'stimCenters'
-            % don't set here, but don't give an error
+            stimCenters = val;
         case 'stimWidth'
-            showModelParameters = val;
+            stimWidth = val;
         otherwise
             warning(['attentionModel: invalid parameter: ',field]);
     end
 end
 
 %% Choose default values for unspecified parameters
+if notDefined('x')
+    x = -200:200;
+end
 if notDefined('ExWidth')
     ExWidth = 5;
 end
@@ -113,7 +117,8 @@ if notDefined('Ax')
     Ax = NaN;
 end
 if notDefined('AxWidth')
-    AxWidth = ExWidth;
+%     AxWidth = ExWidth;
+    AxWidth = 30;
 end
 if notDefined('Apeak')
     Apeak =  2;
@@ -130,11 +135,24 @@ end
 if notDefined('baselineUnmod')
     baselineUnmod = 0;
 end
-if notDefined('showActivityMaps')
-    showActivityMaps = 0;
-end
 if notDefined('showModelParameters')
     showModelParameters = 0;
+end
+if notDefined('stimCenters')
+    stimCenters = [100 -100];
+end
+if notDefined('stimWidth')
+    stimWidth = 5;
+end
+if notDefined('stimulus')
+    stimulus = rd_nmMakeStim(x, stimCenters, stimWidth);
+end
+if notDefined('figHandle')
+    figure;
+    figHandle = gcf;
+end
+if notDefined('axHandle')
+    axHandle = gca;
 end
 
 %% Stimulation field and suppressive field
@@ -165,7 +183,9 @@ R = E ./ (I + sigma) + baselineUnmod;
 Rmax = max(R(:));
 
 %% Plot figs
-figure
+figure(figHandle)
+axes(axHandle)
+cla;
 hold on
 plot(x, stimulus,'k')
 plot(x, attnGain,'k')
