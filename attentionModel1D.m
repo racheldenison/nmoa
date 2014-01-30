@@ -198,6 +198,7 @@ plot(x, I,'r')
 plot(x, R,'b')
 xlabel('position')
 ylabel('activity')
+ylim([0 3.5])
 
 legend('stim','attn','Eraw','E','I','R')
 
