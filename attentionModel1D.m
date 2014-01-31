@@ -28,8 +28,8 @@ function R = attentionModel1D(varargin)
 %    field, suppressive field, and attention field.
 % stimCenters: if no stimulus input is given, make the stimulus based on
 %    these centers.
-% stimWidth: if no stimulus input is given, make the stimulus based on this
-%    width.
+% stimWidth: if no stimulus input is given, give the stimulus this width.
+% stimAmp: if no stimulus input is given, give the stimulus this amplitude.
 % axHandle: plot the figure in the axes given by this handle.
 %
 % If Ax is NaN or not specified then attention is spread evenly
@@ -94,6 +94,8 @@ for index = 1:2:length(inputs)
             stimCenters = val;
         case 'stimWidth'
             stimWidth = val;
+        case 'stimAmp'
+            stimAmp = val;
         case 'axHandle'
             axHandle = val;
         otherwise
@@ -109,6 +111,9 @@ if notDefined('x')
 end
 if notDefined('attnGain')
     attnGain = NaN;
+end
+if notDefined('attnGainX')
+    attnGainX = NaN;
 end
 if notDefined('ExWidth')
     ExWidth = 5;
@@ -147,8 +152,11 @@ end
 if notDefined('stimWidth')
     stimWidth = 5;
 end
+if notDefined('stimAmp')
+    stimAmp = 1;
+end
 if notDefined('stimulus')
-    stimulus = rd_nmMakeStim(x, stimCenters, stimWidth);
+    stimulus = rd_nmMakeStim(x, stimCenters, stimWidth, stimAmp);
 end
 if notDefined('axHandle')
     axHandle = [];

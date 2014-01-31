@@ -1,4 +1,4 @@
-function [nm R] = rd_nmGUI(opts)
+function [nm opts R] = rd_nmGUI(opts)
 %
 % function [nm R] = rd_nmGUI(opts)
 %
@@ -8,6 +8,8 @@ function [nm R] = rd_nmGUI(opts)
 % OUTPUTS:
 % nm is the gui structure. This is a *required* output argument for the gui
 % to work.
+% opts is the options structure. This is also a *required* output argument 
+%   for the gui to work.
 % R is the current response of the model (1 by length of x) and is
 % optional.
 %
@@ -35,6 +37,8 @@ nm.ui.stimPos(1) = nmMakeSlider('Stim 1 pos', [-200 200], ...
                              [.04 .17 .3 .1], 0, -100);
 nm.ui.stimPos(2) = nmMakeSlider('Stim 2 pos', [-200 200], ...
                              [.37 .17 .3 .1], 0, 100);
+nm.ui.stimAmp = nmMakeSlider('Stim amp', [0 1], ...
+                             [.04 .05 .3 .1], 0, 1);
 nm.ui.attnPos = nmMakeSlider('Attn pos', [-200 200], ...
                              [.7 .17 .3 .1], 0, 100);
 nm.ui.attnSize = nmMakeSlider('Attn size', [0 100], ...
