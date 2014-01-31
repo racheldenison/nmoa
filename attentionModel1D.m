@@ -8,8 +8,13 @@ function R = attentionModel1D(varargin)
 %
 % x: row vector of spatial coordinates
 % stimulus: 1xM where M is the length of x. Leave empty to generate
-% default stimulus. If stimulus exists, it will override the stimCenters
-% arguments.
+%   default stimulus. If stimulus is given as input, it will override the 
+%   stimCenters arguments.
+% attnGain: the attention field. if this is given as input, all other
+%   attention settings will be overridden, except attn on/off.
+% attnGainX: the attention field before getting scaled by the base and peak
+%   parameters. will override all other attention settings except attnGain
+%   and attn on/off.
 % ExWidth: spatial spread of stimulation field
 % IxWidth: spatial spread of suppressive field
 % Ax: spatial center of attention field
@@ -63,6 +68,8 @@ for index = 1:2:length(inputs)
             stimulus = val;
         case 'attnGain'
             attnGain = val;
+        case 'attnGainX'
+            attnGainX = val;
         case 'ExWidth'
             ExWidth = val;
         case 'IxWidth'
@@ -152,16 +159,16 @@ ExKernel = makeGaussian(x,0,ExWidth);
 IxKernel = makeGaussian(x,0,IxWidth);
 
 %% Attention field
-if isnan(attnGain)
-    % if ~isnan(attnGainX)
-    %     attnGain = (Apeak-Abase)*attnGainX + Abase;
-    if isnan(Ax)
-        attnGain = ones(size(stimulus));
-        attnGainX = ones(size(x));
-    else
-        attnGainX = makeGaussian(x,Ax,AxWidth,1);
-        attnGain = (Apeak-Abase)*attnGainX + Abase;
-    end
+if isnan(Ax)
+    attnGain = ones(size(stimulus));
+    attnGainX = ones(size(x));
+elseif ~isnan(attnGain)
+    % do nothing - just use attnGain as given
+elseif ~isnan(attnGainX)
+    attnGain = (Apeak-Abase)*attnGainX + Abase;
+else
+    attnGainX = makeGaussian(x,Ax,AxWidth,1);
+    attnGain = (Apeak-Abase)*attnGainX + Abase;
 end
 
 %% Stimulus drive

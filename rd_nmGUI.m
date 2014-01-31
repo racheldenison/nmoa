@@ -1,4 +1,22 @@
-function [nm R] = rd_nmGUI
+function [nm R] = rd_nmGUI(opts)
+%
+% function [nm R] = rd_nmGUI(opts)
+%
+% INPUTS:
+% opts is an options structure for the model (optional)
+% 
+% OUTPUTS:
+% nm is the gui structure. This is a *required* output argument for the gui
+% to work.
+% R is the current response of the model (1 by length of x) and is
+% optional.
+%
+% Rachel Denison
+% Jan 2014
+
+if notDefined('opts')
+    opts = [];
+end
 
 % make figure
 nm.ui.fig = figure('Color', 'w',...
@@ -7,10 +25,8 @@ nm.ui.fig = figure('Color', 'w',...
                       'Position', [.02 .25 .4 .7],...
                       'NumberTitle', 'off',...
                       'MenuBar', 'none',...
-                      'Tag','nmFig'); %, ...
-%                       'CloseRequestFcn', 'closereq; nmRefresh;');
-                        
-                         
+                      'Tag','nmFig');
+                              
 % make axes
 nm.ui.axes = axes('Position', [.15 .35 .75 .60]);
 
@@ -28,10 +44,10 @@ nm.ui.attnSize = nmMakeSlider('Attn size', [0 100], ...
 nm.ui.attnOn = uicontrol('Style', 'checkbox', 'String', 'Attn On',...
           'Units', 'normalized', 'Position', [.77 .02 .2 .05], ...
           'Value', 1, 'FontSize', 10, ...
-          'BackgroundColor', 'w', 'Callback', 'nmRefresh;');
+          'BackgroundColor', 'w', 'Callback', 'nmRefresh(nm, opts);');
       
 % set UserData
 set(nm.ui.fig,'UserData',nm)
 
 % refresh figure
-[nm R] = nmRefresh(nm);
+[nm R] = nmRefresh(nm, opts);

@@ -1,9 +1,11 @@
 % rd_runNMOA.m
 
 %% Set up the opts structure
-opts.stimCenters = [0];
-opts.stimWidth = 30;
-% opts.Ax = opts.stimCenters(1);
+op.stimCenters = [0 50 100];
+op.stimWidth = 30;
+% op.Ax = opts.stimCenters(1);
 
 %% Run model
-R = attentionModel1D(opts);
+R = attentionModel1D(op);
+
+opts.attnGainX = R;

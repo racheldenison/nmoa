@@ -58,7 +58,7 @@ color = get(gcf,'Color');
 % Slider callback string: 
 cbstr = 'slider = get(gcbo,''UserData'');';
 cbstr = sprintf('%s \n rxSetSlider(slider);',cbstr);
-cbstr = sprintf('%s \n nmRefresh;',cbstr);
+cbstr = sprintf('%s \n nmRefresh(nm, opts);',cbstr);
 
 % slider position within box
 sliderPos = pos;
@@ -99,7 +99,7 @@ labelHandle = uicontrol('Style','text',...
 cbstr = 'val = str2num(get(gcbo,''String''));';
 cbstr = sprintf('%s \n slider = get(gcbo,''UserData'');',cbstr);
 cbstr = sprintf('%s \n rxSetSlider(slider,val);',cbstr);
-cbstr = sprintf('%s \n nmRefresh;',cbstr);
+cbstr = sprintf('%s \n nmRefresh(nm, opts);',cbstr);
 
 
 % edit pos within box
