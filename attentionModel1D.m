@@ -94,8 +94,8 @@ for index = 1:2:length(inputs)
             stimCenters = val;
         case 'stimWidth'
             stimWidth = val;
-        case 'stimAmp'
-            stimAmp = val;
+        case 'stimAmps'
+            stimAmps = val;
         case 'axHandle'
             axHandle = val;
         otherwise
@@ -152,11 +152,11 @@ end
 if notDefined('stimWidth')
     stimWidth = 5;
 end
-if notDefined('stimAmp')
-    stimAmp = 1;
+if notDefined('stimAmps')
+    stimAmps = [1 1];
 end
 if notDefined('stimulus')
-    stimulus = rd_nmMakeStim(x, stimCenters, stimWidth, stimAmp);
+    stimulus = rd_nmMakeStim(x, stimCenters, stimWidth, stimAmps);
 end
 if notDefined('axHandle')
     axHandle = [];

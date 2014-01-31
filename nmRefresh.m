@@ -15,13 +15,12 @@ if ~exist('nm', 'var') || isempty(nm)
 end
 
 %% Get settings from UI controls 
-% stim position
 for i = 1:numel(nm.ui.stimPos)
+    % stim position
     stimPos(i) = get(nm.ui.stimPos(i).sliderHandle,'Value');
+    % stim amp
+    stimAmps(i) = get(nm.ui.stimAmps(i).sliderHandle,'Value');
 end
-
-% stim amp
-stimAmp = get(nm.ui.stimAmp.sliderHandle,'Value');
 
 % attention position
 attnPos = get(nm.ui.attnPos.sliderHandle,'Value');
@@ -35,7 +34,7 @@ attnOn = get(nm.ui.attnOn,'Value');
 %% Set opts
 opts.stimCenters = stimPos;
 
-opts.stimAmp = stimAmp;
+opts.stimAmps = stimAmps;
 
 if attnOn
     opts.Ax = attnPos;
