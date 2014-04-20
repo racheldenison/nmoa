@@ -116,13 +116,13 @@ if notDefined('attnGainX')
     attnGainX = NaN;
 end
 if notDefined('ExWidth')
-    ExWidth = 5;
+    ExWidth = 3; % 5
 end
 if notDefined('IxWidth')
-    IxWidth = 5; % 20
+    IxWidth = 20; % 20
 end
 if notDefined('IxShift')
-    IxShift = 5;
+    IxShift = 0;
 end
 if notDefined('Ax')
     Ax = NaN;
@@ -153,21 +153,21 @@ if notDefined('stimCenters')
     stimCenters = [100 -100];
 end
 if notDefined('stimWidth')
-    stimWidth = 5;
+    stimWidth = 50; % 5, 50
 end
 if notDefined('stimAmps')
     stimAmps = [1 1];
 end
 if notDefined('stimShape')
-    stimShape = 'default';
+    stimShape = 'square';
 end
 if notDefined('stimulus')
     stimulus = rd_nmMakeStim(x, stimCenters, stimWidth, stimAmps);
     switch stimShape
         case 'square'
-            stimulus = round(stimulus);
-        otherwise
-            error('stimShape not recognized')
+            stimulus0 = stimulus;
+            stimulus(stimulus0>=max(stimulus0/2)) = max(stimulus0);
+            stimulus(stimulus0<max(stimulus0/2)) = 0;
     end
 end
 if notDefined('axHandle')
@@ -177,6 +177,10 @@ end
 %% Stimulation field and suppressive field
 ExKernel = makeGaussian(x,0,ExWidth);
 IxKernel = makeGaussian(x,0,IxWidth);
+
+% Crop kernels
+ExKernel = ExKernel(ExKernel>max(ExKernel)/50);
+IxKernel = IxKernel(IxKernel>max(IxKernel)/50);
 
 % Shift IxKernel
 IxKernel = [IxKernel(end-IxShift+1:end) IxKernel(1:end-IxShift)];
@@ -195,12 +199,17 @@ else
 end
 
 %% Stimulus drive
-Eraw = conv2sepYcirc(stimulus,ExKernel) + baselineMod;
+% Eraw = conv2sepYcirc(stimulus,ExKernel) + baselineMod;
+% We don't want circular convolution for time domain
+Eraw = conv(stimulus,ExKernel) + baselineMod;
+Eraw = Eraw(1:size(stimulus,2));
 Emax = max(Eraw(:));
 E = attnGain .* Eraw;
 
 %% Suppressive drive
-I = conv2sepYcirc(E,IxKernel);
+% I = conv2sepYcirc(E,IxKernel);
+I = conv(E,IxKernel);
+I = I(1:size(stimulus,2));
 Imax = max(I(:));
 
 %% Normalization
