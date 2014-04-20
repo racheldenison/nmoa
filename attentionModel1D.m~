@@ -8,13 +8,13 @@ function R = attentionModel1D(varargin)
 %
 % x: row vector of spatial coordinates
 % stimulus: 1xM where M is the length of x. Leave empty to generate
-% default stimulus. If stimulus exists, it will override the stimCenters
-% arguments.
+%   default stimulus. If stimulus is given as input, it will override the 
+%   stimCenters arguments.
 % attnGain: the attention field. if this is given as input, all other
-% attention settings will be overridden, except attention on or off.
+%   attention settings will be overridden, except attn on/off.
 % attnGainX: the attention field before getting scaled by the base and peak
-% parameters. will override all other attention settings, except attention
-% on or off and attnGain.
+%   parameters. will override all other attention settings except attnGain
+%   and attn on/off.
 % ExWidth: spatial spread of stimulation field
 % IxWidth: spatial spread of suppressive field
 % Ax: spatial center of attention field
@@ -28,8 +28,8 @@ function R = attentionModel1D(varargin)
 %    field, suppressive field, and attention field.
 % stimCenters: if no stimulus input is given, make the stimulus based on
 %    these centers.
-% stimWidth: if no stimulus input is given, make the stimulus based on this
-%    width.
+% stimWidth: if no stimulus input is given, give the stimulus this width.
+% stimAmp: if no stimulus input is given, give the stimulus this amplitude.
 % axHandle: plot the figure in the axes given by this handle.
 %
 % If Ax is NaN or not specified then attention is spread evenly
@@ -94,6 +94,8 @@ for index = 1:2:length(inputs)
             stimCenters = val;
         case 'stimWidth'
             stimWidth = val;
+        case 'stimAmps'
+            stimAmps = val;
         case 'axHandle'
             axHandle = val;
         otherwise
@@ -110,12 +112,18 @@ end
 if notDefined('attnGain')
     attnGain = NaN;
 end
+if notDefined('attnGainX')
+    attnGainX = NaN;
+end
 if notDefined('ExWidth')
     ExWidth = 5;
 end
 if notDefined('IxWidth')
     IxWidth = 20;
 end
+if notDefined('IxShift')
+    IxShift = 20;
+    e
 if notDefined('Ax')
     Ax = NaN;
 end
@@ -147,8 +155,11 @@ end
 if notDefined('stimWidth')
     stimWidth = 5;
 end
+if notDefined('stimAmps')
+    stimAmps = [1 1];
+end
 if notDefined('stimulus')
-    stimulus = rd_nmMakeStim(x, stimCenters, stimWidth);
+    stimulus = rd_nmMakeStim(x, stimCenters, stimWidth, stimAmps);
 end
 if notDefined('axHandle')
     axHandle = [];
@@ -158,16 +169,18 @@ end
 ExKernel = makeGaussian(x,0,ExWidth);
 IxKernel = makeGaussian(x,0,IxWidth);
 
-%% Attention field
+% Shift IxKernel
+IxKernel = [IxKernel(end-IxShift+1:end) IxKernel(1:end-IxShift)];
 
+%% Attention field
+if isnan(Ax)
+    attnGain = ones(size(stimulus));
+    attnGainX = ones(size(x));
 elseif ~isnan(attnGain)
     % do nothing - just use attnGain as given
 elseif ~isnan(attnGainX)
     attnGain = (Apeak-Abase)*attnGainX + Abase;
-    else
-        if isnan(Ax)
-            attnGain = ones(size(stimulus));
-            attnGainX = ones(size(x));
+else
     attnGainX = makeGaussian(x,Ax,AxWidth,1);
     attnGain = (Apeak-Abase)*attnGainX + Abase;
 end

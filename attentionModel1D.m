@@ -119,7 +119,10 @@ if notDefined('ExWidth')
     ExWidth = 5;
 end
 if notDefined('IxWidth')
-    IxWidth = 20;
+    IxWidth = 5; % 20
+end
+if notDefined('IxShift')
+    IxShift = 5;
 end
 if notDefined('Ax')
     Ax = NaN;
@@ -155,8 +158,17 @@ end
 if notDefined('stimAmps')
     stimAmps = [1 1];
 end
+if notDefined('stimShape')
+    stimShape = 'default';
+end
 if notDefined('stimulus')
     stimulus = rd_nmMakeStim(x, stimCenters, stimWidth, stimAmps);
+    switch stimShape
+        case 'square'
+            stimulus = round(stimulus);
+        otherwise
+            error('stimShape not recognized')
+    end
 end
 if notDefined('axHandle')
     axHandle = [];
@@ -165,6 +177,9 @@ end
 %% Stimulation field and suppressive field
 ExKernel = makeGaussian(x,0,ExWidth);
 IxKernel = makeGaussian(x,0,IxWidth);
+
+% Shift IxKernel
+IxKernel = [IxKernel(end-IxShift+1:end) IxKernel(1:end-IxShift)];
 
 %% Attention field
 if isnan(Ax)
