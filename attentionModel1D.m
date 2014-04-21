@@ -121,6 +121,9 @@ end
 if notDefined('IxWidth')
     IxWidth = 20; % 20
 end
+if notDefined('IxShape')
+    IxShape = 'exp';
+end
 if notDefined('IxShift')
     IxShift = 0;
 end
@@ -176,7 +179,14 @@ end
 
 %% Stimulation field and suppressive field
 ExKernel = makeGaussian(x,0,ExWidth);
-IxKernel = makeGaussian(x,0,IxWidth);
+IxKernel0 = makeGaussian(x,0,IxWidth);
+
+switch IxShape
+    case {'gaussian','default',''}
+        IxKernel = IxKernel0;
+    case 'exp'
+        IxKernel = exppdf(x,IxWidth);
+end
 
 % Crop kernels
 ExKernel = ExKernel(ExKernel>max(ExKernel)/50);
@@ -233,7 +243,8 @@ plot(x, I,'r')
 plot(x, R,'b')
 xlabel('position')
 ylabel('activity')
-ylim([0 3.5])
+% ylim([0 3.5])
+ylim([0 20])
 
 legend('stim','attn','Eraw','E','I','R')
 
