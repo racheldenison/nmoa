@@ -122,7 +122,7 @@ if notDefined('IxWidth')
     IxWidth = 20; % 20
 end
 if notDefined('IxShape')
-    IxShape = 'exp';
+    IxShape = 'exp'; % 'gaussian','exp'
 end
 if notDefined('IxShift')
     IxShift = 0;
