@@ -162,16 +162,10 @@ if notDefined('stimAmps')
     stimAmps = [1 1];
 end
 if notDefined('stimShape')
-    stimShape = 'square';
+    stimShape = 'square'; % 'gaussian','square'
 end
 if notDefined('stimulus')
-    stimulus = rd_nmMakeStim(x, stimCenters, stimWidth, stimAmps);
-    switch stimShape
-        case 'square'
-            stimulus0 = stimulus;
-            stimulus(stimulus0>=max(stimulus0/2)) = max(stimulus0);
-            stimulus(stimulus0<max(stimulus0/2)) = 0;
-    end
+    stimulus = rd_nmMakeStim(x, stimCenters, stimWidth, stimAmps, stimShape);
 end
 if notDefined('axHandle')
     axHandle = [];
@@ -182,7 +176,7 @@ ExKernel = makeGaussian(x,0,ExWidth);
 IxKernel0 = makeGaussian(x,0,IxWidth);
 
 switch IxShape
-    case {'gaussian','default',''}
+    case 'gaussian'
         IxKernel = IxKernel0;
     case 'exp'
         IxKernel = exppdf(x,IxWidth);

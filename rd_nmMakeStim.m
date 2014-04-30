@@ -1,4 +1,4 @@
-function stimulus = rd_nmMakeStim(x, stimCenters, stimWidth, stimAmps)
+function stimulus = rd_nmMakeStim(x, stimCenters, stimWidth, stimAmps, stimShape)
 %
 % function stimulus = rd_nmMakeStim(x, stimCenters, stimWidth, stimAmps)
 %
@@ -13,11 +13,21 @@ function stimulus = rd_nmMakeStim(x, stimCenters, stimWidth, stimAmps)
 
 % stimCenters = [100 -100];
 
+if nargin < 5 || isempty(stimShape)
+    stimShape = 'gaussian';
+end
 if nargin < 4 || isempty(stimAmps)
     stimAmps = [1 1];
 end
 
 for iStim = 1:numel(stimCenters)
-    stim(iStim,:) = makeGaussian(x,stimCenters(iStim),stimWidth,stimAmps(iStim)); 
+    switch stimShape
+        case 'gaussian'
+            stim(iStim,:) = makeGaussian(x,stimCenters(iStim),stimWidth,stimAmps(iStim));
+        case 'square'
+            stim(iStim,:) = makeSquareWave(x,stimCenters(iStim),stimWidth,stimAmps(iStim));
+        otherwise
+            error('stimShape not recognized')
+    end
 end
 stimulus = sum(stim,1);
