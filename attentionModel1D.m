@@ -98,6 +98,8 @@ for index = 1:2:length(inputs)
             stimAmps = val;
         case 'axHandle'
             axHandle = val;
+        case 'plotFigs'
+            plotFigs = val;
         otherwise
             warning(['attentionModel: invalid parameter: ',field]);
     end
@@ -170,6 +172,9 @@ end
 if notDefined('axHandle')
     axHandle = [];
 end
+if notDefined('plotFigs')
+    plotFigs = 1;
+end
 
 %% Stimulation field and suppressive field
 ExKernel = makeGaussian(x,0,ExWidth);
@@ -222,25 +227,27 @@ R = E ./ (I + sigma) + baselineUnmod;
 Rmax = max(R(:));
 
 %% Plot figs
-if isempty(axHandle)
-    gca
-else
-    axes(axHandle)
+if plotFigs
+    if isempty(axHandle)
+        gca
+    else
+        axes(axHandle)
+    end
+    cla;
+    hold on
+    plot(x, stimulus,'k')
+    plot(x, attnGain,'k')
+    plot(x, Eraw,'c')
+    plot(x, E,'g')
+    plot(x, I,'r')
+    plot(x, R,'b')
+    xlabel('position')
+    ylabel('activity')
+    % ylim([0 3.5])
+    ylim([0 20])
+    
+    legend('stim','attn','Eraw','E','I','R')
 end
-cla;
-hold on
-plot(x, stimulus,'k')
-plot(x, attnGain,'k')
-plot(x, Eraw,'c')
-plot(x, E,'g')
-plot(x, I,'r')
-plot(x, R,'b')
-xlabel('position')
-ylabel('activity')
-% ylim([0 3.5])
-ylim([0 20])
-
-legend('stim','attn','Eraw','E','I','R')
 
 %% Plot more figs
 if showModelParameters == 1
