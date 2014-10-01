@@ -1,7 +1,8 @@
 % rd_runNMOA.m
 
 %% Set up the opts structure
-op.stimCenters = [0 50 100];
+op.stimCenters = -150:50:150;
+op.stimAmps = ones(size(op.stimCenters));
 op.stimWidth = 30;
 
 %% Run model
