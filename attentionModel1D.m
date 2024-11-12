@@ -1,10 +1,11 @@
-function R = attentionModel1D(varargin)
+function [R, Rmax] = attentionModel1D(varargin)
 %
-% R = attentionModel([param1],[value1],[param2],[value2],...,[paramN],[valueN])
+% [R, Rmax] = attentionModel1D([param1],[value1],[param2],[value2],...,[paramN],[valueN])
+% [R, Rmax] = attentionModel1D(opts)
 %
-% Optional parameters are passed as string/value pairs. If any of them are
-% not specified then default values are used. Valid parameters are as
-% follows.
+% Optional parameters are passed as string/value pairs or as fields of opts. 
+% If any of them are not specified then default values are used. Valid 
+% parameters are as follows.
 %
 % x: row vector of spatial coordinates
 % stimulus: 1xM where M is the length of x. Leave empty to generate
@@ -29,7 +30,7 @@ function R = attentionModel1D(varargin)
 % stimCenters: if no stimulus input is given, make the stimulus based on
 %    these centers.
 % stimWidth: if no stimulus input is given, give the stimulus this width.
-% stimAmp: if no stimulus input is given, give the stimulus this amplitude.
+% stimAmps: if no stimulus input is given, give the stimulus this amplitude.
 % axHandle: plot the figure in the axes given by this handle.
 %
 % If Ax is NaN or not specified then attention is spread evenly
@@ -135,7 +136,7 @@ if notDefined('Abase')
     Abase = 1;
 end
 if notDefined('sigma')
-    sigma = 1e-6;
+    sigma = 0.3; %1e-6;
 end
 if notDefined('baselineMod')
     baselineMod = 0;
@@ -193,6 +194,14 @@ R = E ./ (I + sigma) + baselineUnmod;
 
 Rmax = max(R(:));
 
+%% Set plot colors
+colors.stimulus = [0 0 0];
+colors.attnGain = [.7 .7 .7];
+colors.Eraw = [153 216 201]/255;
+colors.E = [44 162 95]/255;
+colors.I = [253 141 60]/255; % [222 45 48]/255;
+colors.R = [84 39 143]/255; % 117 107 177
+
 %% Plot figs
 if isempty(axHandle)
     gca
@@ -201,15 +210,15 @@ else
 end
 cla;
 hold on
-plot(x, stimulus,'k')
-plot(x, attnGain,'k')
-plot(x, Eraw,'c')
-plot(x, E,'g')
-plot(x, I,'r')
-plot(x, R,'b')
-xlabel('position')
-ylabel('activity')
-ylim([0 3.5])
+plot(x, stimulus, 'Color', colors.stimulus)
+plot(x, attnGain, 'Color', colors.attnGain)
+plot(x, Eraw, 'Color', colors.Eraw)
+plot(x, E, 'Color', colors.E)
+plot(x, I, 'Color', colors.I)
+plot(x, R, 'Color', colors.R)
+xlabel('Position')
+ylabel('Activity')
+ylim([0 2.5])
 
 legend('stim','attn','Eraw','E','I','R')
 
