@@ -136,7 +136,7 @@ if notDefined('Abase')
     Abase = 1;
 end
 if notDefined('sigma')
-    sigma = 0.3; %1e-6;
+    sigma = 0.1; %1e-6; %0.3
 end
 if notDefined('baselineMod')
     baselineMod = 0;
